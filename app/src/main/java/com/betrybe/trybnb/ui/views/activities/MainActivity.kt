@@ -6,6 +6,7 @@ import com.betrybe.trybnb.R
 
 class MainActivity : AppCompatActivity() {
 
+    // inicia o projeto
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
