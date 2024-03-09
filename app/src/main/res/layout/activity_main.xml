@@ -20,7 +20,7 @@
 
             <ImageView
                 android:id="@+id/logo_main_activity"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:cropToPadding="true"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -29,6 +29,25 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/logo" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/main_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/navigation_bottom_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_vertical"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/bottom_navigation_menu" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
