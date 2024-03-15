@@ -7,7 +7,7 @@ object RetrofitApi {
 
     private var retrofit: Retrofit? = null
 
-    fun getInstance(): ApiServiceLogin {
+    fun getInstance(): ApiService {
 
         if(retrofit === null) {
             retrofit = Retrofit.Builder()
@@ -16,6 +16,6 @@ object RetrofitApi {
                 .build()
         }
 
-        return retrofit?.create(ApiServiceLogin::class.java)!!
+        return retrofit?.create(ApiService::class.java)!!
     }
 }

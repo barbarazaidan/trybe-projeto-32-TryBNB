@@ -15,7 +15,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.betrybe.trybnb.R
 import com.betrybe.trybnb.common.ApiIdlingResource
-import com.betrybe.trybnb.data.api.ApiServiceLogin
+import com.betrybe.trybnb.data.api.ApiService
 import com.betrybe.trybnb.data.api.LoginRequest
 import com.betrybe.trybnb.data.api.LoginResponse
 import com.betrybe.trybnb.data.api.RetrofitApi
@@ -75,7 +75,7 @@ class ProfileFragment : Fragment() {
 
                 // val apiLogin = RetrofitApi.getInstance()
 
-                val apiLogin = retrofit.create(ApiServiceLogin::class.java)
+                val apiLogin = retrofit.create(ApiService::class.java)
                 val responseApi = apiLogin.postLoginAuthentication(LoginRequest(username, password))
 
                 if (responseApi.isSuccessful) {
@@ -136,9 +136,4 @@ class ProfileFragment : Fragment() {
             callApiService(username, password)
         }
     }
-
-//    private fun isValidCredentials(username: String, password: String): Boolean {
-//        // Lógica para verificar se os campos não estão vazios
-//        return username.isNotEmpty() && password.isNotEmpty()
-//    }
 }
