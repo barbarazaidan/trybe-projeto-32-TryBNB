@@ -1,17 +1,37 @@
 package com.betrybe.trybnb.ui.views.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.betrybe.trybnb.R
+import com.betrybe.trybnb.common.ApiIdlingResource
+import com.betrybe.trybnb.data.api.ApiServiceLogin
+import com.betrybe.trybnb.data.api.LoginRequest
+import com.betrybe.trybnb.data.api.LoginResponse
+import com.betrybe.trybnb.data.api.RetrofitApi
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.HttpException
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 import java.util.regex.Pattern.matches
 
 class ProfileFragment : Fragment() {
@@ -19,6 +39,7 @@ class ProfileFragment : Fragment() {
     private lateinit var inputLogin: TextInputLayout
     private lateinit var inputPassword: TextInputLayout
     private lateinit var buttonLogin: Button
+    private lateinit var successMessage: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,6 +51,7 @@ class ProfileFragment : Fragment() {
         inputLogin = view.findViewById(R.id.login_input_profile)
         inputPassword = view.findViewById(R.id.password_input_profile)
         buttonLogin = view.findViewById(R.id.login_button_profile)
+        successMessage = view.findViewById(R.id.success_message)
 
         buttonLogin.setOnClickListener {
             handleLogin()
@@ -38,14 +60,67 @@ class ProfileFragment : Fragment() {
         return view
     }
 
+    private fun callApiService(username: String, password: String) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                // ADICIONAR ESSA LINHA
+                ApiIdlingResource.increment()
+
+                val retrofit = Retrofit.Builder()
+                    .baseUrl("https://restful-booker.herokuapp.com/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+
+                // val apiLogin = RetrofitApi.getInstance()
+
+                val apiLogin = retrofit.create(ApiServiceLogin::class.java)
+                val responseApi = apiLogin.postLoginAuthentication(LoginRequest(username, password))
+
+                if (responseApi.isSuccessful) {
+                    withContext(Dispatchers.Main) {
+                        val loginResponse = responseApi.body()
+                        // Log.d("LoginResponse", loginResponse.toString())
+                        successMessage.visibility = View.VISIBLE
+                    }
+                } else {
+                    // Log.d("AuthenticationFailure", "Falha de autenticação: ${response.code()}")
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setMessage("Dados inválido. Tente de novo")
+                        .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+                        .setCancelable(false)
+                        .create().show()
+                }
+
+                // ADICIONAR ESSA LINHA
+                ApiIdlingResource.decrement()
+            } catch (e: HttpException) {
+                // ADICIONAR ESSA LINHA
+                ApiIdlingResource.decrement()
+
+                //...
+                // Seu Codigo de erro de HttpException
+                // ...
+            } catch (e: IOException) {
+                // ADICIONAR ESSA LINHA
+                ApiIdlingResource.decrement()
+
+                //...
+                // Seu Codigo de erro de IOException
+                // ...
+            }
+        }
+    }
+
     private fun handleLogin() {
         val username = inputLogin.editText?.text.toString()
         val password = inputPassword.editText?.text.toString()
 
-       isBlankCredentials(username, password)
+        isValidCredentials(username, password)
     }
 
-    private fun isBlankCredentials(username: String, password: String) {
+    private fun isValidCredentials(username: String, password: String) {
         if (username.isEmpty()) {
             inputLogin.error = "O campo Login é obrigatório"
         } else {
@@ -55,6 +130,10 @@ class ProfileFragment : Fragment() {
             inputPassword.error = "O campo Password é obrigatório"
         } else {
             inputPassword.error = null
+        }
+
+        if (username.isNotEmpty() && password.isNotEmpty()) {
+            callApiService(username, password)
         }
     }
 

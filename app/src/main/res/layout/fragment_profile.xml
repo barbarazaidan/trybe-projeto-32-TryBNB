@@ -50,10 +50,23 @@
                 android:hint="hint" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/success_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Login feito com sucesso!"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
         <Button
             android:id="@+id/login_button_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Login" />
+
+
     </LinearLayout>
 </ScrollView>
