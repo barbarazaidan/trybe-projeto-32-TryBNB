@@ -17,10 +17,8 @@ import java.util.regex.Pattern.matches
 class ProfileFragment : Fragment() {
 
     private lateinit var inputLogin: TextInputLayout
-    private lateinit var inpuPassword: TextInputLayout
+    private lateinit var inputPassword: TextInputLayout
     private lateinit var buttonLogin: Button
-    // private lateinit var layout: LinearLayout
-    // private lateinit var mscrollview: ScrollView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,12 +27,39 @@ class ProfileFragment : Fragment() {
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
-        // mscrollview = view.findViewById(R.id.profile_scroll_view)
-        // layout = view.findViewById(R.id.profile_container)
         inputLogin = view.findViewById(R.id.login_input_profile)
-        inpuPassword = view.findViewById(R.id.password_input_profile)
+        inputPassword = view.findViewById(R.id.password_input_profile)
         buttonLogin = view.findViewById(R.id.login_button_profile)
+
+        buttonLogin.setOnClickListener {
+            handleLogin()
+        }
 
         return view
     }
+
+    private fun handleLogin() {
+        val username = inputLogin.editText?.text.toString()
+        val password = inputPassword.editText?.text.toString()
+
+       isBlankCredentials(username, password)
+    }
+
+    private fun isBlankCredentials(username: String, password: String) {
+        if (username.isEmpty()) {
+            inputLogin.error = "O campo Login é obrigatório"
+        } else {
+            inputLogin.error = null
+        }
+        if (password.isEmpty()) {
+            inputPassword.error = "O campo Password é obrigatório"
+        } else {
+            inputPassword.error = null
+        }
+    }
+
+//    private fun isValidCredentials(username: String, password: String): Boolean {
+//        // Lógica para verificar se os campos não estão vazios
+//        return username.isNotEmpty() && password.isNotEmpty()
+//    }
 }
