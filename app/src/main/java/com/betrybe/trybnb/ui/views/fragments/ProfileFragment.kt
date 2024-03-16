@@ -1,38 +1,26 @@
 package com.betrybe.trybnb.ui.views.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.ScrollView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.betrybe.trybnb.R
 import com.betrybe.trybnb.common.ApiIdlingResource
 import com.betrybe.trybnb.data.api.ApiService
 import com.betrybe.trybnb.data.api.LoginRequest
-import com.betrybe.trybnb.data.api.LoginResponse
-import com.betrybe.trybnb.data.api.RetrofitApi
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.HttpException
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
-import java.util.regex.Pattern.matches
 
 class ProfileFragment : Fragment() {
 
@@ -72,8 +60,6 @@ class ProfileFragment : Fragment() {
                     .baseUrl("https://restful-booker.herokuapp.com/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
-
-                // val apiLogin = RetrofitApi.getInstance()
 
                 val apiLogin = retrofit.create(ApiService::class.java)
                 val responseApi = apiLogin.postLoginAuthentication(LoginRequest(username, password))
